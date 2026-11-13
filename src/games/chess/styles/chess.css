@@ -245,8 +245,16 @@
   border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
   box-shadow: 0 30px 60px -40px var(--accent);
 }
-.setup-art { position: relative; min-height: 280px; }
-.setup-art svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.setup-art {
+  position: relative; min-height: 280px; display: grid; place-items: center; overflow: hidden;
+  background: radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--accent) 22%, #0a0c1f), #06081a 75%);
+}
+.setup-art svg {
+  position: relative; width: 100%; height: auto; aspect-ratio: 9 / 5;
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 50%, transparent 100%);
+  mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 50%, transparent 100%);
+}
+@media (max-width: 860px) { .setup-art svg { -webkit-mask-image: none; mask-image: none; } }
 .setup-art::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 60%, #0a0c1f); }
 .setup-form { display: flex; flex-direction: column; gap: 22px; padding: 30px; }
 .setup-form h1 { font-size: clamp(1.9rem, 3.5vw, 2.6rem); margin-top: 6px; }
@@ -337,4 +345,45 @@
 }
 @media (max-width: 560px) {
   .chess-page .game-topbar .chip { display: none; }
+}
+
+/* =========================================================
+   Phase 4 — Computer vs You
+   ========================================================= */
+.engine-badge { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; padding: 6px 12px; border-radius: 999px; font-size: 0.82rem; font-weight: 600; color: var(--muted); background: rgb(255 255 255 / 0.05); border: 1px solid var(--border); }
+.engine-badge.ok { color: var(--green); border-color: rgb(93 255 157 / 0.35); }
+.engine-badge.ok i { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); }
+.engine-badge.bad { color: var(--pink); border-color: rgb(255 79 184 / 0.4); }
+.engine-badge button, .link-btn { border: 0; background: none; color: var(--cyan); font-weight: 700; cursor: pointer; padding: 0; }
+.spinner.sm { width: 14px; height: 14px; border-width: 2px; }
+
+.level-list { display: flex; flex-direction: column; gap: 8px; }
+.level-card { position: relative; display: flex; align-items: center; gap: 14px; padding: 11px 14px; border-radius: 14px; cursor: pointer; background: rgb(255 255 255 / 0.04); border: 1px solid var(--border); transition: border-color 0.2s, background 0.2s, box-shadow 0.2s, transform 0.2s var(--ease); }
+.level-card:hover { border-color: var(--border-strong); transform: translateX(3px); }
+.level-card input { position: absolute; opacity: 0; pointer-events: none; }
+.level-card.active { border-color: color-mix(in srgb, var(--accent) 75%, transparent); background: color-mix(in srgb, var(--accent) 12%, transparent); box-shadow: 0 0 20px -8px var(--accent); }
+.level-card:has(input:focus-visible) { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.level-pips { display: inline-flex; gap: 3px; align-items: flex-end; flex-shrink: 0; }
+.level-pips i { width: 5px; border-radius: 2px; background: rgb(255 255 255 / 0.14); }
+.level-pips i:nth-child(1) { height: 8px; } .level-pips i:nth-child(2) { height: 11px; } .level-pips i:nth-child(3) { height: 14px; } .level-pips i:nth-child(4) { height: 17px; } .level-pips i:nth-child(5) { height: 20px; }
+.level-pips i.on { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+.level-text { display: flex; flex-direction: column; }
+.level-text small { color: var(--dim); font-size: 0.82rem; }
+.option-grid.three { grid-template-columns: repeat(3, 1fr); }
+
+.think-bar { height: 3px; border-radius: 3px; overflow: hidden; background: rgb(46 230 255 / 0.12); }
+.think-bar i { display: block; width: 40%; height: 100%; border-radius: inherit; background: linear-gradient(90deg, transparent, var(--cyan), transparent); animation: think 1.1s ease-in-out infinite; }
+@keyframes think { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
+.player-name .thinking { display: inline-flex; align-items: center; gap: 4px; font-weight: 600; animation: glow-pulse 1.2s ease-in-out infinite; }
+
+.hint-arrow { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; filter: drop-shadow(0 0 4px rgb(255 201 77 / 0.8)); opacity: 0.92; animation: pop 0.2s var(--ease); }
+.hint-head { display: flex; align-items: center; justify-content: space-between; }
+.hint-text { color: var(--muted); }
+.hint-text strong { color: var(--gold); font-family: var(--font-display); }
+.toggle.compact { gap: 0; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (max-width: 560px) {
+  .option-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+  .option-grid.three .option-card { padding: 10px; }
 }

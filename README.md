@@ -66,5 +66,16 @@ Lives in `src/games/chess/` and is code-split behind `/play/chess/*`.
 - `hooks/useChessGame.js` — board state, selection, promotion, undo/reset/FEN load; `applyMove` for engine/network moves.
 - `components/ChessBoard.jsx` — click-to-move, drag-and-drop (mouse + touch), legal-move dots, last-move/check highlights, flip.
 - `/play/chess/analysis` — free analysis board with rule demo positions, FEN load, FEN/PGN copy.
+- `/play/chess/local` — Friend vs Friend (same device): names, Bullet/Blitz/Rapid/Unlimited clocks, undo, resign, rematch.
+- `/play/chess/computer` — Computer vs You against Stockfish 17.1 (5 levels, hints, practice undo).
+
+### Stockfish engine
+- Package: [`stockfish`](https://github.com/nmrugg/stockfish.js) 17.1 — **lite single-threaded WASM** build (~7 MB),
+  which needs no SharedArrayBuffer / COOP+COEP headers.
+- `scripts/copy-engine.mjs` copies it to `public/engine/` (runs automatically via `predev` / `prebuild`; the folder is git-ignored).
+- Runs in a **Web Worker** (`services/stockfishService.js`), talking UCI. The engine gets the full move list,
+  so it sees repetitions and the fifty-move count.
+- Difficulty settings live in `services/engineLevels.js` (Skill Level + depth + time cap).
+- Stockfish is **GPL-3**; its licence and authors file are shipped next to the engine in `public/engine/`.
 
 Piece artwork is adapted from Colin M.L. Burnett's chess set (Wikimedia Commons; GPLv2+ / BSD / GFDL).

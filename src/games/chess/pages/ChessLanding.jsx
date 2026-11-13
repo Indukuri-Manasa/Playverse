@@ -24,7 +24,7 @@ const MODE_CARDS = [
   },
   {
     id: 'computer', title: 'Computer vs You', tag: 'Stockfish engine', icon: 'cpu', art: ComputerArt,
-    color: '#2ee6ff', color2: '#4d7cff', onAccent: '#031321', phase: 4,
+    color: '#2ee6ff', color2: '#4d7cff', onAccent: '#031321', to: '/play/chess/computer',
     description: 'Challenge a real chess engine across five levels, from Beginner to Expert.',
     features: ['5 difficulty levels', 'Play as White or Black', 'Move hints and practice undo'],
   },

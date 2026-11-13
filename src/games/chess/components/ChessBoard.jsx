@@ -49,6 +49,26 @@ function reconcile(prev, board) {
   return out
 }
 
+function HintArrow({ hint, orientation }) {
+  const a = screenPos(hint.from, orientation)
+  const b = screenPos(hint.to, orientation)
+  const x1 = a.col + 0.5, y1 = a.row + 0.5, x2 = b.col + 0.5, y2 = b.row + 0.5
+  const len = Math.hypot(x2 - x1, y2 - y1)
+  // stop the shaft short of the target centre so the arrowhead sits on the square
+  const ex = x2 - ((x2 - x1) / len) * 0.32, ey = y2 - ((y2 - y1) / len) * 0.32
+  return (
+    <svg className="hint-arrow" viewBox="0 0 8 8" aria-hidden="true">
+      <defs>
+        <marker id="pv-hint-head" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="3.2" markerHeight="3.2" orient="auto">
+          <path d="M0 0L10 5L0 10z" fill="#ffc94d" />
+        </marker>
+      </defs>
+      <circle cx={x1} cy={y1} r="0.32" fill="none" stroke="#ffc94d" strokeWidth="0.07" />
+      <line x1={x1} y1={y1} x2={ex} y2={ey} stroke="#ffc94d" strokeWidth="0.16" strokeLinecap="round" markerEnd="url(#pv-hint-head)" />
+    </svg>
+  )
+}
+
 /**
  * Presentational chessboard. All rules live in chess.js (via useChessGame);
  * the board only reports intents: onSelect(square) and onMove(from, to).
@@ -71,6 +91,7 @@ export default function ChessBoard({
   showCoords = true,
   disabled = false,
   theme = 'neon',
+  hint = null, // { from, to } — drawn as an arrow
 }) {
   const boardRef = useRef(null)
   const drag = useRef(null)
@@ -191,6 +212,7 @@ export default function ChessBoard({
             </div>
           ))}
         </div>
+        {hint && <HintArrow hint={hint} orientation={orientation} />}
         {pendingPromotion && (
           <PromotionDialog color={pendingPromotion.color} onPick={onPromote} onCancel={onCancelPromotion} />
         )}

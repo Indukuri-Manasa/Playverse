@@ -56,7 +56,7 @@ function LocalSetup({ setup, onChange, onStart }) {
       </div>
       <section className="setup-card" style={{ '--accent': '#b26bff', '--accent-2': '#ff4fb8' }}>
         <div className="setup-art">
-          <svg viewBox="0 0 360 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><FriendArt uid={uid} /></svg>
+          <svg viewBox="0 0 360 200" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><FriendArt uid={uid} /></svg>
         </div>
         <form className="setup-form" onSubmit={(e) => { e.preventDefault(); onStart() }}>
           <div>

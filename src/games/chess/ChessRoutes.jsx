@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom'
 import ChessLanding from './pages/ChessLanding'
 import AnalysisBoard from './pages/AnalysisBoard'
 import LocalChess from './modes/LocalChess'
+import ComputerChess from './modes/ComputerChess'
 import NotFound from '../../pages/NotFound'
 import './styles/chess.css'
 
@@ -14,6 +15,7 @@ export default function ChessRoutes() {
       <Route index element={<ChessLanding />} />
       <Route path="analysis" element={<AnalysisBoard />} />
       <Route path="local" element={<LocalChess />} />
+      <Route path="computer" element={<ComputerChess />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   )
