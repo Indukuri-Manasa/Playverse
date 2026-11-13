@@ -136,6 +136,22 @@ export function useChessGame({ fen, controls = 'both', onMove } = {}) {
     [chess, refresh],
   )
 
+  /** Replace the game with `moves` (UCI strings like "e7e8q") played from `startFen`. Used to mirror the server. */
+  const loadMoves = useCallback(
+    (moves, startFen) => {
+      chess.load(startFen ?? fen ?? createGame().fen())
+      for (const m of moves) {
+        try {
+          chess.move({ from: m.slice(0, 2), to: m.slice(2, 4), promotion: m[4] || undefined })
+        } catch {
+          break
+        }
+      }
+      refresh()
+    },
+    [chess, fen, refresh],
+  )
+
   const legalTargets = selected ? snap.legal[selected] ?? [] : []
 
   return {
@@ -152,5 +168,6 @@ export function useChessGame({ fen, controls = 'both', onMove } = {}) {
     undo,
     reset,
     loadFen,
+    loadMoves,
   }
 }

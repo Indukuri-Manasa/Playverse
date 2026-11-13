@@ -7,6 +7,10 @@
     "copy-engine": "node scripts/copy-engine.mjs",
     "predev": "node scripts/copy-engine.mjs",
     "dev": "vite",
+    "predev:online": "node scripts/copy-engine.mjs",
+    "dev:online": "node scripts/dev-online.mjs",
+    "server": "node server/index.js",
+    "start": "node server/index.js --serve",
     "prebuild": "node scripts/copy-engine.mjs",
     "build": "vite build",
     "lint": "eslint .",
@@ -19,6 +23,8 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.18.5",
+    "socket.io": "^4.8.4",
+    "socket.io-client": "^4.8.4",
     "stockfish": "^17.1.0"
   },
   "devDependencies": {

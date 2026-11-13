@@ -30,7 +30,7 @@ const MODE_CARDS = [
   },
   {
     id: 'online', title: 'Online Match', tag: 'Real-time · Room codes', icon: 'globe', art: OnlineArt,
-    color: '#ff4fb8', color2: '#ff9f43', phase: 5,
+    color: '#ff4fb8', color2: '#ff9f43', to: '/play/chess/online',
     description: 'Create a room, share the 6-character code, and play a friend on any device.',
     features: ['Live move sync via Socket.IO', 'Server-validated moves', 'Reconnect and rematch support'],
   },

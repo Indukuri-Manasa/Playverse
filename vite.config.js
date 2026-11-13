@@ -1,14 +1,13 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
+// /socket.io is proxied to the PlayVerse game server (server/index.js, port 3001),
+// so the app and the realtime API share one origin — also when opened from another device.
+const gameServer = { '/socket.io': { target: 'http://localhost:3001', ws: true } }
+
 // https://vite.dev/config/
-// allowedHosts lets temporary Cloudflare quick-tunnel URLs (*.trycloudflare.com) reach the app.
 export default defineConfig({
   plugins: [react()],
-  server: {
-    allowedHosts: ['.trycloudflare.com'],
-  },
-  preview: {
-    allowedHosts: ['.trycloudflare.com'],
-  },
+  server: { proxy: gameServer },
+  preview: { proxy: gameServer },
 })

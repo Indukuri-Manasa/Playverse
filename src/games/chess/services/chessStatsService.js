@@ -30,14 +30,14 @@ export const REASON_LABEL = {
   'fifty-move': 'Fifty-move rule',
   insufficient: 'Insufficient material',
   agreement: 'Draw by agreement',
+  abandoned: 'Opponent disconnected',
 }
 
-/** Appends a finished match (keeps the last 300). */
-export const addMatch = (data, match) => ({
-  ...EMPTY_CHESS,
-  ...data,
-  matches: [...(data?.matches ?? []), match].slice(-300),
-})
+/** Appends a finished match (keeps the last 300). Ignores a match id that is already saved. */
+export const addMatch = (data, match) =>
+  data?.matches?.some((m) => m.id === match.id)
+    ? data
+    : { ...EMPTY_CHESS, ...data, matches: [...(data?.matches ?? []), match].slice(-300) }
 
 export const AI_LEVELS = [
   { id: 'beginner', label: 'Beginner' },

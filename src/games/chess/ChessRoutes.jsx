@@ -3,6 +3,7 @@ import ChessLanding from './pages/ChessLanding'
 import AnalysisBoard from './pages/AnalysisBoard'
 import LocalChess from './modes/LocalChess'
 import ComputerChess from './modes/ComputerChess'
+import OnlineChess from './modes/OnlineChess'
 import NotFound from '../../pages/NotFound'
 import './styles/chess.css'
 
@@ -16,6 +17,7 @@ export default function ChessRoutes() {
       <Route path="analysis" element={<AnalysisBoard />} />
       <Route path="local" element={<LocalChess />} />
       <Route path="computer" element={<ComputerChess />} />
+      <Route path="online" element={<OnlineChess />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   )

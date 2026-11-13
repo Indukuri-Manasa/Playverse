@@ -8,7 +8,7 @@ import { REASON_LABEL } from '../services/chessStatsService'
  * Match-completion overlay.
  * outcome = { winner: 'w'|'b'|null, reason }, names = { w, b }
  */
-export default function GameResult({ outcome, names, moves, perspective, onRematch, onReview, onExit, rematchLabel = 'Rematch' }) {
+export default function GameResult({ outcome, names, moves, perspective, onRematch, onReview, onExit, rematchLabel = 'Rematch', rematchDisabled = false, exitLabel = 'Chess Battle', children }) {
   useEffect(() => {
     const onKey = (e) => e.key === 'Escape' && onReview()
     window.addEventListener('keydown', onKey)
@@ -42,10 +42,11 @@ export default function GameResult({ outcome, names, moves, perspective, onRemat
           <div><dt>White</dt><dd>{names.w}</dd></div>
           <div><dt>Black</dt><dd>{names.b}</dd></div>
         </dl>
+        {children}
         <div className="result-actions">
-          <Button onClick={onRematch} size="lg"><Icon name="refresh" size={16} /> {rematchLabel}</Button>
+          {onRematch && <Button onClick={onRematch} size="lg" disabled={rematchDisabled}><Icon name="refresh" size={16} /> {rematchLabel}</Button>}
           <Button variant="secondary" onClick={onReview}><Icon name="search" size={16} /> Review board</Button>
-          <Button variant="ghost" onClick={onExit}><Icon name="arrowLeft" size={16} /> Chess Battle</Button>
+          <Button variant="ghost" onClick={onExit}><Icon name="arrowLeft" size={16} /> {exitLabel}</Button>
         </div>
       </div>
     </div>
