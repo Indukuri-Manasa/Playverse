@@ -1,9 +1,18 @@
 import { io } from 'socket.io-client'
 
-// Same origin as the app: Vite (dev) or server/index.js --serve (prod) forwards /socket.io
-// to the game server, so this works on localhost and from other devices on the network.
+// Where the game server lives:
+// - VITE_GAME_SERVER_URL set at build time (e.g. https://playverse-server.onrender.com) → connect there.
+//   Needed when the site is on static hosting such as Vercel, which can't run the Socket.IO server.
+// - Not set → same origin: Vite (dev) or `npm run start` forwards /socket.io to the game server.
+export const GAME_SERVER_URL = (import.meta.env.VITE_GAME_SERVER_URL ?? '').trim().replace(/\/+$/, '')
+
 export function connectChess() {
-  return io('/chess', { path: '/socket.io', reconnectionDelayMax: 4000, timeout: 8000 })
+  return io(`${GAME_SERVER_URL}/chess`, { path: '/socket.io', reconnectionDelayMax: 4000, timeout: 20000 })
+}
+
+/** True when the app itself is running on this computer / local network (dev setup). */
+export function isLocalHost(hostname = window.location.hostname) {
+  return /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(hostname) || hostname.endsWith('.local')
 }
 
 /** emit with acknowledgement + timeout → always resolves to { ok, error?, … } */

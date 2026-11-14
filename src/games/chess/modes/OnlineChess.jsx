@@ -14,7 +14,7 @@ import { OnlineArt } from '../art/ChessArt'
 import { useChessGame } from '../hooks/useChessGame'
 import { useChessStats } from '../hooks/useChessStats'
 import { useOnlineRoom } from '../hooks/useOnlineRoom'
-import { errorText } from '../services/chessSocket'
+import { errorText, isLocalHost } from '../services/chessSocket'
 import { COLOR_NAME, opposite } from '../services/chessService'
 import { REASON_LABEL, TIME_CONTROLS, getTimeControl } from '../services/chessStatsService'
 
@@ -92,8 +92,12 @@ function Lobby({ online }) {
 
         {online.conn === 'offline' && (
           <div className="server-help">
-            <strong>Can’t reach the game server.</strong>
-            <span>Start PlayVerse with <code>npm run dev:online</code> (or <code>npm run server</code> next to <code>npm run dev</code>).</span>
+            <strong>Can’t reach the game server{isLocalHost() ? '.' : ' yet — retrying automatically.'}</strong>
+            {isLocalHost() ? (
+              <span>Start PlayVerse with <code>npm run dev:online</code> (or <code>npm run server</code> next to <code>npm run dev</code>).</span>
+            ) : (
+              <span>Online play is temporarily unavailable. If the server was asleep it can take up to a minute to wake up — you can keep this page open.</span>
+            )}
           </div>
         )}
 
@@ -177,7 +181,7 @@ function WaitingRoom({ online }) {
   const [copied, setCopied] = useState('')
   const link = inviteLink(room.code, lan)
   const tc = getTimeControl(room.timeControl)
-  const local = ['localhost', '127.0.0.1'].includes(window.location.hostname)
+  const local = isLocalHost()
 
   async function copy(kind, text) {
     try {

@@ -108,7 +108,15 @@ server/
 **Playing on other devices (same Wi-Fi):** run `npm run dev:online` (or `npm run build && npm run start`) and
 open the invite link the app shows — it uses this Mac's local IP. macOS may ask to allow incoming connections for `node`.
 
-**Hosting it publicly (not done — this project stays local):** you would need a Node 18+ host that supports
+**Deploying with Vercel (frontend) + a separate game server:** Vercel serves static files only and can't
+run the Socket.IO server, so host `server/` on a service with WebSocket support and point the site at it:
+
+1. Game server (e.g. Render → New → Web Service from this repo): build `npm install`, start `node server/index.js`,
+   health check `/health`, env `CORS_ORIGINS=https://<your-vercel-domain>`.
+2. Vercel → Project → Settings → Environment Variables: `VITE_GAME_SERVER_URL=https://<your-game-server-domain>`, then redeploy.
+3. `vercel.json` rewrites every route to `index.html`, so deep links like `/play/chess/online?join=CODE` work.
+
+**General hosting requirements:** you would need a Node 18+ host that supports
 long-lived WebSocket connections (a VPS or a container platform, not static hosting), HTTPS/WSS in front
 (a reverse proxy such as Caddy/Nginx, with WebSocket upgrade headers for `/socket.io`), `npm run build`
 then `npm run start` with `PORT` set, and a single instance — room state is in memory, so scaling to several

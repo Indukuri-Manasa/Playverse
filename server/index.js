@@ -14,7 +14,10 @@ const PORT = Number(process.env.PORT) || 3001
 const SERVE = process.argv.includes('--serve')
 // API-only mode sits behind the Vite proxy, so it stays on localhost. With --serve it is the
 // whole app and listens on the local network so other devices can open it.
-const HOST = process.env.HOST || (SERVE ? '0.0.0.0' : '127.0.0.1')
+// Hosting platforms (Render, Railway, Fly…) set PORT and need a public interface.
+const HOST = process.env.HOST || (SERVE || process.env.PORT ? '0.0.0.0' : '127.0.0.1')
+// Sites allowed to connect from another origin, e.g. "https://playverse-beta.vercel.app" (comma-separated).
+const CORS_ORIGINS = (process.env.CORS_ORIGINS ?? '').split(',').map((o) => o.trim().replace(/\/+$/, '')).filter(Boolean)
 const DIST = join(dirname(fileURLToPath(import.meta.url)), '..', 'dist')
 
 const MIME = {
@@ -43,10 +46,11 @@ function send(res, status, body, type = 'text/plain') {
 const http = createServer((req, res) => {
   if (req.url === '/health') return send(res, 200, JSON.stringify({ ok: true, rooms: rooms.rooms.size }), 'application/json')
   if (SERVE) return serveStatic(req, res)
-  send(res, 404, 'PlayVerse game server — open the app via Vite (npm run dev:online) or start with --serve')
+  send(res, 200, 'PlayVerse game server is running. Health check: /health')
 })
 
 const io = new Server(http, {
+  cors: CORS_ORIGINS.length ? { origin: CORS_ORIGINS, methods: ['GET', 'POST'] } : undefined,
   maxHttpBufferSize: 10_000, // chess messages are tiny; refuse anything large
   pingInterval: 10_000,
   pingTimeout: 8_000,
@@ -56,5 +60,6 @@ setInterval(() => rooms.sweep(), SWEEP_INTERVAL_MS).unref()
 
 http.listen(PORT, HOST, () => {
   console.log(`[playverse] game server on http://localhost:${PORT}${SERVE ? ' (serving dist/)' : ''}`)
+  if (CORS_ORIGINS.length) console.log(`[playverse] allowing browser connections from: ${CORS_ORIGINS.join(', ')}`)
   if (SERVE) for (const ip of lanAddresses()) console.log(`[playverse] on your network: http://${ip}:${PORT}`)
 })
